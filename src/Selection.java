@@ -3,7 +3,7 @@ public class Selection {
 	public static List<Content> select(int time, Map<Integer, List<Content>> schedules, Map<Integer, Double> areaWeight){
 		List<Content> result = new ArrayList<>();
 		findQualifiedContent(time, schedules);
-		bruteForce(schedules, areaWeight, new HashSet<Integer>(), new Double(0), new ArrayList<Content>(), result, 0, 0);
+		bruteForce(schedules, areaWeight, new HashSet<Integer>(), new ArrayList<Content>(), result, new Double(0), 0, 0);
 		return result;
 	}
 	
@@ -21,7 +21,7 @@ public class Selection {
 	}
 
 	private static void bruteForce(Map<Integer, List<Content>> schedules, Map<Integer, Double> areaWeight, 
-			Set<Integer> visited, Double globalSum, List<Content> currentSelction, List<Content> result, 
+			Set<Integer> visited, List<Content> currentSelction, List<Content> result, Double globalSum, 
 			int idx, double currentSum){
 		if(idx == schedules.size()){
 			if(currentSum > globalSum.doubleValue()){
@@ -36,7 +36,7 @@ public class Selection {
 				continue;
 			visited.add(c.getId());
 			currentSelction.add(c);
-			bruteForce(schedules, areaWeight, visited, globalSum, currentSelction, result, idx+1, currentSum+c.getContentWeight()*areaWeight.get(idx));
+			bruteForce(schedules, areaWeight, visited, currentSelction, result, globalSum, idx+1, currentSum+c.getContentWeight()*areaWeight.get(idx));
 			visited.remove(c.getId());
 			currentSelction.remove(currentSelction.size()-1);
 		}
