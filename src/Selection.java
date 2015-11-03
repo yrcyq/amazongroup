@@ -21,24 +21,31 @@ public class Selection {
 	}
 
 	private static void bruteForce(Map<Integer, List<Content>> schedules, Map<Integer, Double> areaWeight, 
-			Set<Integer> visited, List<Content> currentSelction, List<Content> result, Double globalSum, 
+			Set<Integer> visited, List<Content> currentSelection, List<Content> result, Double globalSum, 
 			int idx, double currentSum){
 		if(idx == schedules.size()){
 			if(currentSum > globalSum.doubleValue()){
 				globalSum  = new Double(currentSum);
-				result = new ArrayList<>(currentSelction);
+				result = new ArrayList<>(currentSelection);
 			}
 			return;
 		}
 		List<Content> schedule = schedules.get(idx);
-		for(Content c : schedule){
-			if(visited.contains(c.getId()))
-				continue;
-			visited.add(c.getId());
-			currentSelction.add(c);
-			bruteForce(schedules, areaWeight, visited, currentSelction, result, globalSum, idx+1, currentSum+c.getContentWeight()*areaWeight.get(idx));
-			visited.remove(c.getId());
-			currentSelction.remove(currentSelction.size()-1);
+		for(int i = -1; i < schedule.size(); i++){
+			if(i == -1){
+				currentSelection.add(null);
+				bruteForce(schedules, areaWeight, visited, currentSelection, result, globalSum, idx+1, currentSum);
+			}
+			else{
+				Content c = schedule.get(i);
+				if(visited.contains(c.getId()))
+					continue;
+				visited.add(c.getId());
+				currentSelection.add(c);
+				bruteForce(schedules, areaWeight, visited, currentSelection, result, globalSum, idx+1, currentSum+c.getContentWeight()*areaWeight.get(idx));
+				visited.remove(c.getId());
+			}
+			currentSelection.remove(currentSelection.size()-1);
 		}
 	}
 }
