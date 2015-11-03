@@ -22,19 +22,19 @@ public class Selection {
 
 	private static void bruteForce(Map<Integer, List<Content>> schedules, Map<Integer, Double> areaWeight, 
 			Set<Integer> visited, List<Content> currentSelection, List<Content> result, Double globalSum, 
-			int idx, double currentSum){
-		if(idx == schedules.size()){
+			int currentArea, double currentSum){
+		if(currentArea == schedules.size()){
 			if(currentSum > globalSum.doubleValue()){
 				globalSum  = new Double(currentSum);
 				result = new ArrayList<>(currentSelection);
 			}
 			return;
 		}
-		List<Content> schedule = schedules.get(idx);
+		List<Content> schedule = schedules.get(currentArea);
 		for(int i = -1; i < schedule.size(); i++){
 			if(i == -1){
 				currentSelection.add(null);
-				bruteForce(schedules, areaWeight, visited, currentSelection, result, globalSum, idx+1, currentSum);
+				bruteForce(schedules, areaWeight, visited, currentSelection, result, globalSum, currentArea+1, currentSum);
 			}
 			else{
 				Content c = schedule.get(i);
@@ -42,7 +42,7 @@ public class Selection {
 					continue;
 				visited.add(c.getId());
 				currentSelection.add(c);
-				bruteForce(schedules, areaWeight, visited, currentSelection, result, globalSum, idx+1, currentSum+c.getContentWeight()*areaWeight.get(idx));
+				bruteForce(schedules, areaWeight, visited, currentSelection, result, globalSum, currentArea+1, currentSum+c.getContentWeight()*areaWeight.get(currentArea));
 				visited.remove(c.getId());
 			}
 			currentSelection.remove(currentSelection.size()-1);
