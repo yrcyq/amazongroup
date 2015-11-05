@@ -31,4 +31,8 @@ public class Content {
 	public int getContentWeight(){
 		return (start-end+1)*value;
 	}
+	@Override
+	public int hashCode(){
+		return id;
+	}
 }
