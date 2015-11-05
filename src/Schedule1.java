@@ -10,7 +10,7 @@ public class Schedule1 {
 			public int compare(Content o1, Content o2) {
 				// TODO Auto-generated method stub
 				//assume the value is per time 
-				return o1.getContentWeight()/(o1.getEnd()-o1.getStart()+1)-o2.getContentWeight()/(o2.getEnd()-o2.getStart()+1);
+				return -o1.getContentWeight()/(o1.getEnd()+o1.getStart()+1)-o2.getContentWeight()/(o2.getEnd()-o2.getStart()+1);
 			}
 			
 		});
