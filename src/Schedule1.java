@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Schedule1 {
-	public static List<Content> schedule(List<Content> availableContents, int limit){
+	public static List<Content> validSchedule(List<Content> availableContents, int limit){
 		if(availableContents == null || availableContents.isEmpty())
 			return new ArrayList<Content>();
 		Collections.sort(availableContents,new Comparator<Content>(){
