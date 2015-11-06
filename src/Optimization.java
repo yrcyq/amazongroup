@@ -1,5 +1,11 @@
 import java.util.*;
-
+/*
+ * two optimization approach: 1. time fit, 2. space fit;
+ * future work: 
+ * use a occupied load factor 
+ * if the occupied load factor is below threshold, which means their are many empty time, so use time fit
+ * else, which means most time is occupied, then we need to find the most fit space for the content 
+ */
 
 public class Optimization {
 	public static Map<Content, int[]> insert(Map<Integer, List<Content>> schedules, List<Content> toBeInsertedContents, int limit){
@@ -22,10 +28,39 @@ public class Optimization {
 		return result;
 	}
 	
-	
+	// time fit, choose the earlist available time
 	private static int[] insert(Map<Integer, Map<Integer, Set<Content>>> availableTimes, Content c, int limit) {
 		// TODO Auto-generated method stub
-		return null;
+		int areaNo = -1;
+		int startTime = Integer.MAX_VALUE;
+		for(int i = 0; i<availableTimes.size(); i++){
+			Map<Integer, Set<Content>> availableTime = availableTimes.get(i);
+			//availableTime is TreeMap, so the key is in ascending order
+			for(int j = 0, count = 0; j <=availableTime.size(); j++){	
+				if(j == availableTime.size()){
+					if(startTime > j){
+						startTime = j;
+						areaNo = i;
+					}
+					break;
+				}
+				Set<Content> exist = availableTime.get(j);
+				if(exist.size() >= limit || exist.contains(c)){
+					count = 0;
+					continue;
+				}
+				count++;
+				if(count == c.getEnd() - c.getStart() + 1){
+					int start = j - count + 1;
+					if(start < startTime){
+						startTime = start;
+						areaNo = i;
+					}
+					break;
+				}
+			}
+		}
+		return new int[]{areaNo, startTime};
 	}
 
 
