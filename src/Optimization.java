@@ -15,12 +15,7 @@ public class Optimization {
 			Map<Integer, Set<Content>> availableTime = findAvailableTime(schedules.get(i), limit);
 			availableTimes.put(i, availableTime);
 		}
-		Collections.sort(toBeInsertedContents, new Comparator<Content>(){
-			@Override
-			public int compare(Content o1, Content o2){
-				return -o1.getContentWeight()/(o1.getEnd()+o1.getStart()+1)-o2.getContentWeight()/(o2.getEnd()-o2.getStart()+1);
-			}
-		});
+		Collections.sort(toBeInsertedContents, new MyComparator());
 		for(Content c : toBeInsertedContents){
 			int[] pair = insert(availableTimes, c, limit);
 			result.put(c, pair);
