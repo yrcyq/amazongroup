@@ -31,20 +31,33 @@ public class Optimization {
 		for(int i = 0; i<availableTimes.size(); i++){
 			Map<Integer, Set<Content>> availableTime = availableTimes.get(i);
 			//availableTime is TreeMap, so the key is in ascending order
-			for(int j = 0, count = 0; j <=availableTime.size(); j++){	
-				if(j == availableTime.size()){
-					if(startTime > j){
-						startTime = j;
+			//use last and j to judge whether they are continuous empty area
+			int count = 0, last = 1;
+			Iterator<Integer> it = availableTime.keySet().iterator();
+			while(true){
+				if(!it.hasNext()){
+					if(last < startTime){
+						startTime = last;
 						areaNo = i;
 					}
-					break;
 				}
+				int j = it.next();
 				Set<Content> exist = availableTime.get(j);
 				if(exist.size() >= limit || exist.contains(c)){
+					last = j + 1;
 					count = 0;
 					continue;
 				}
-				count++;
+				if(last == j)
+					count = 1;
+				else if(last == j-1){
+					count++;
+					last = j;
+				}
+				else{
+					count = 0;
+					last = j;
+				}
 				if(count == c.getEnd() - c.getStart() + 1){
 					int start = j - count + 1;
 					if(start < startTime){
@@ -55,9 +68,22 @@ public class Optimization {
 				}
 			}
 		}
+		update(availableTimes.get(areaNo), startTime, limit, c);
 		return new int[]{areaNo, startTime};
 	}
 
+
+	private static void update(Map<Integer, Set<Content>> availableTime, int startTime,
+			int limit, Content c) {
+		// TODO Auto-generated method stub		
+		c.setEnd(startTime+c.getEnd()-c.getStart());
+		c.setStart(startTime);
+		for(int i = c.getStart(); i <= c.getEnd(); i++){
+			availableTime.get(i).add(c);
+			if(availableTime.get(i).size() >= limit)
+				availableTime.remove(i);
+		}
+	}
 
 	private static Map<Integer, Set<Content>> findAvailableTime(List<Content> contents, int limit){
 		Map<Integer, Set<Content>> unavailable = new HashMap<>();
